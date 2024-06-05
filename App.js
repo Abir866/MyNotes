@@ -15,13 +15,13 @@ function HomeScreen({ navigation }) {
   
   useEffect(() => {
     if (addNoteData != undefined) {
-      console.log(addNoteData.title);
-      navigation.navigate("Edit", {data: addNoteData});
+      
+      navigation.navigate("Note", {data: addNoteData});
     }
   }, [addNoteData]);
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("Edit", {data: item}) } style={tw`w-[98%] mb-0.5 mx-auto bg-purple-300 rounded-sm px-1`}> 
+    <TouchableOpacity onPress={() => navigation.navigate("Note", {data: item}) } style={tw` m-0.5 bg-purple-300 rounded-sm px-1`}> 
       <Text>{item.title}</Text>
       <Text>{item.content}</Text>      
     </TouchableOpacity>
@@ -35,29 +35,31 @@ function HomeScreen({ navigation }) {
   const { data: searchData, error, isLoading } = useSearchNotesQuery(searchText);
 
   return (
-  <View style={tw`w-full h-full`}>
+  
+    
+    <View style={tw`w-full h-full bg-gray-400`}>
     <TouchableOpacity onPress={focusInput}>
-     <TextInput ref={inputRef} defaultValue={searchText} placeholder="Enter text" onChangeText={(newValue)=>{setSearchText(newValue)}} style={tw`h-12 px-2 bg-blue-100 rounded-lg`} />
+     <TextInput ref={inputRef} defaultValue={searchText} placeholder="Enter text" onChangeText={(newValue)=>{setSearchText(newValue)}} style={tw`h-12 p-2 m-2 bg-blue-100 rounded-lg`} />
     </TouchableOpacity>
-    <View style={tw`flex-1 items-center justify-center bg-gray-400`}>
 
       {searchData ? 
         <MasonryList
-          style={tw`px-0.5 pt-0.5 pb-20`}
+          style={tw`w-full h-full`}
           
           data={searchData}
           numColumns={2}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={0.1}
         />  
         : <></>
       }
-      <TouchableOpacity onPress={() => { addNote({title: "test", content: "content"}); }} style={tw`bg-blue-500 rounded-full absolute bottom-[5%] right-8 mx-auto items-center flex-1 justify-center w-12 h-12`}>
+      <TouchableOpacity onPress={() => { addNote({title: "", content: ""}); }} style={tw`bg-blue-500 rounded-full absolute bottom-[10%] right-8 mx-auto items-center flex-1 justify-center w-12 h-12`}>
         <Text style={tw`text-white text-center text-3xl mt--1`}>+</Text>
       </TouchableOpacity>
     </View>
-  </View> 
+
   );
 }
 
@@ -69,7 +71,7 @@ function EditScreen({ route, navigation }) {
   const [text,setText] =useState(data.content)
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: route.params.data.title, headerRight: () => ( <TouchableOpacity onPress={() => {deleteNote({id: data.id, title: textTitle, content: text}); navigation.navigate("Home") }}>
+    navigation.setOptions({  headerRight: () => ( <TouchableOpacity onPress={() => {deleteNote({id: data.id, title: textTitle, content: text}); navigation.navigate("Home") }}>
     <Text style={tw`text-white text-center text-3xl mt--1`}>🗑️</Text>
   </TouchableOpacity> ) });
   updateNote({id: data.id, title: textTitle, content: text });
@@ -80,8 +82,8 @@ function EditScreen({ route, navigation }) {
   
   return (
     <View style={tw`h-full w-full bg-purple-400`}>
-      <TextInput  defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2`} />
-      <TextInput multiline defaultValue={text} onChangeText={(newValue)=>{setText(newValue); updateNote({id: data.id, title: textTitle, content: text })}} style={tw`h-full w-full px-2`} />
+      <TextInput cursorColor={}  placeholder='Title' placeholderTextColor={'#fff'} defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2`} />
+      <TextInput scrollEnabled={false} multiline defaultValue={text} onChangeText={(newValue)=>{setText(newValue); updateNote({id: data.id, title: textTitle, content: text })}} style={tw`h-full w-full px-2`} />
     </View>
   );
 }
@@ -101,19 +103,22 @@ export default function App() {
               headerTintColor: '#fff',
               headerTitleStyle: tw`font-bold`,
               headerShadowVisible: false, // gets rid of border on device
+              headerTitle: "Notes",
+              headerTitleAlign: 'center'
             }}
             name="Home"
             component={HomeScreen}
           />
           <Stack.Screen
             options={{
-              headerStyle: tw`bg-purple-300 border-0`,
+              headerStyle: tw`bg-purple-300 border-0 text-center`,
               headerTintColor: '#fff',
               headerTitleStyle: tw`font-bold`,
               headerShadowVisible: false, // gets rid of border on device
-              
+              headerTitle:"Notes",
+              headerTitleAlign:'center'
             }}
-            name="Edit"
+            name="Note"
             component={EditScreen}
           />
         </Stack.Navigator>
