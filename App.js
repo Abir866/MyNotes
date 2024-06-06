@@ -12,7 +12,9 @@ function HomeScreen({ navigation }) {
   
   const [ addNote, { data: addNoteData, error: addNoteError }] = useAddNoteMutation();
 
-  
+  /**
+   * Switch to edit screen when adding a note
+   */
   useEffect(() => {
     if (addNoteData != undefined) {
       
@@ -20,8 +22,13 @@ function HomeScreen({ navigation }) {
     }
   }, [addNoteData]);
 
+  /**
+   * To render the notes in notes home screen
+   * @param {*} param0 a note
+   * @returns 
+   */
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("Note", {data: item}) } style={tw` m-0.5 bg-purple-700 rounded-sm px-1`}> 
+    <TouchableOpacity onPress={() => navigation.navigate("Note", {data: item}) } style={tw` m-0.5 bg-purple-400 rounded-sm px-1`}> 
       <Text>{item.title}</Text>
       <Text>{item.content}</Text>      
     </TouchableOpacity>
@@ -37,9 +44,9 @@ function HomeScreen({ navigation }) {
   return (
   
     
-    <View style={tw`w-full h-full bg-gray-400`}>
+    <View style={tw`w-full h-full bg-purple-700`}>
     <TouchableOpacity onPress={focusInput}>
-     <TextInput ref={inputRef} defaultValue={searchText} placeholder="Enter text" onChangeText={(newValue)=>{setSearchText(newValue)}} style={tw`h-12 p-2 m-2 bg-blue-100 rounded-lg`} />
+     <TextInput ref={inputRef} defaultValue={searchText} placeholder="Search" placeholderTextColor={'gray'} onChangeText={(newValue)=>{setSearchText(newValue)}} style={tw`h-12 p-2 m-2 bg-blue-100 rounded-lg`} />
     </TouchableOpacity>
 
       {searchData ? 
@@ -110,8 +117,8 @@ if(data.title == "" && data.text==""){
 
   
   return (
-    <View style={tw`h-full w-full bg-purple-400`}>
-      <TextInput cursorColor={'#2563eb'}  placeholder='Title' placeholderTextColor={'#fff'} defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2`} />
+    <View style={tw`h-full w-full bg-purple-700`}>
+      <TextInput cursorColor={'#2563eb'}  placeholder='Title' placeholderTextColor={'gray'} defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2`} />
       <TextInput scrollEnabled={false} multiline defaultValue={text} onChangeText={(newValue)=>{setText(newValue)}} style={tw`h-full w-full px-2`} />
     </View>
   );
@@ -128,7 +135,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="Home">
           <Stack.Screen
             options={{
-              headerStyle: tw`bg-purple-300 border-0`,
+              headerStyle: tw`bg-purple-700 border-0`,
               headerTintColor: '#fff',
               headerTitleStyle: tw`font-bold`,
               headerShadowVisible: false, // gets rid of border on device
@@ -140,7 +147,7 @@ export default function App() {
           />
           <Stack.Screen
             options={{
-              headerStyle: tw`bg-purple-300 border-0 text-center`,
+              headerStyle: tw`bg-purple-700 border-0 text-center`,
               headerTintColor: '#fff',
               headerTitleStyle: tw`font-bold`,
               headerShadowVisible: false, // gets rid of border on device
