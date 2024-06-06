@@ -105,13 +105,7 @@ function EditScreen({ route, navigation }) {
     return unsubscribe;
   }, [navigation, text, textTitle]);
   
-/** 
- const unsubscribe =()=>{navigation}
-if(data.title == "" && data.text==""){
-  
-  deleteNote({id:data.id, title: data.title, content: data.content})
-}
-*/
+
 
   
 
