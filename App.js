@@ -21,7 +21,7 @@ function HomeScreen({ navigation }) {
   }, [addNoteData]);
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("Note", {data: item}) } style={tw` m-0.5 bg-purple-300 rounded-sm px-1`}> 
+    <TouchableOpacity onPress={() => navigation.navigate("Note", {data: item}) } style={tw` m-0.5 bg-purple-700 rounded-sm px-1`}> 
       <Text>{item.title}</Text>
       <Text>{item.content}</Text>      
     </TouchableOpacity>
@@ -69,21 +69,50 @@ function EditScreen({ route, navigation }) {
   const {data} = route.params
   const [textTitle,setTextTitle] = useState(data.title)
   const [text,setText] =useState(data.content)
-
-  useLayoutEffect(() => {
-    navigation.setOptions({  headerRight: () => ( <TouchableOpacity onPress={() => {deleteNote({id: data.id, title: textTitle, content: text}); navigation.navigate("Home") }}>
+/*
+ The delete button
+*/
+  useEffect(() => {
+    updateNote({id: data.id, title: textTitle, content: text });
+    navigation.setOptions({  headerRight: () => ( <TouchableOpacity onPress={() => {deleteNote({id: data.id, title: textTitle, content: text});console.log("Logo") }}>
     <Text style={tw`text-white text-center text-3xl mt--1`}>🗑️</Text>
   </TouchableOpacity> ) });
-  updateNote({id: data.id, title: textTitle, content: text });
-  }, [textTitle, text]);
+  console.log("When saving "+textTitle)
   
   
+  }, [text, textTitle]);
+ 
+  /*
+  Delete empty note
+  */
+  useEffect(() => {
+     console.log("before"+ textTitle)
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      updateNote({id: data.id, title: textTitle, content: text})
+      console.log('perform actions before leaving screen');
+      if (data.id == data.id && textTitle == ""){
+      deleteNote({id: data.id, title: textTitle, content: text})
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, text, textTitle]);
   
+/** 
+ const unsubscribe =()=>{navigation}
+if(data.title == "" && data.text==""){
+  
+  deleteNote({id:data.id, title: data.title, content: data.content})
+}
+*/
+
+  
+
   
   return (
     <View style={tw`h-full w-full bg-purple-400`}>
-      <TextInput cursorColor={}  placeholder='Title' placeholderTextColor={'#fff'} defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2`} />
-      <TextInput scrollEnabled={false} multiline defaultValue={text} onChangeText={(newValue)=>{setText(newValue); updateNote({id: data.id, title: textTitle, content: text })}} style={tw`h-full w-full px-2`} />
+      <TextInput cursorColor={'#2563eb'}  placeholder='Title' placeholderTextColor={'#fff'} defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2`} />
+      <TextInput scrollEnabled={false} multiline defaultValue={text} onChangeText={(newValue)=>{setText(newValue)}} style={tw`h-full w-full px-2`} />
     </View>
   );
 }
