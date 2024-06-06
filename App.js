@@ -11,7 +11,7 @@ import { useSearchNotesQuery, useAddNoteMutation, useDeleteNoteMutation, useUpda
 function HomeScreen({ navigation }) {
   
   const [ addNote, { data: addNoteData, error: addNoteError }] = useAddNoteMutation();
-
+  
   /**
    * Switch to edit screen when adding a note
    */
