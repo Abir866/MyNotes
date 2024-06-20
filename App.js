@@ -29,7 +29,7 @@ function HomeScreen({ navigation }) {
    */
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => navigation.navigate("Note", {data: item}) } style={tw` m-0.5 bg-purple-400 rounded-sm px-1`}> 
-      <Text>{item.title}</Text>
+      <Text style={tw`text-2xl`}>{item.title}</Text>
       <Text>{item.content}</Text>      
     </TouchableOpacity>
   )
@@ -87,7 +87,7 @@ function EditScreen({ route, navigation }) {
   console.log("When saving "+textTitle)
   
   
-  }, [text, textTitle]);
+  }, [navigation, text, textTitle]);
  
   /*
   Delete empty note
@@ -97,7 +97,7 @@ function EditScreen({ route, navigation }) {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       updateNote({id: data.id, title: textTitle, content: text})
       console.log('perform actions before leaving screen');
-      if (data.id == data.id && textTitle == ""){
+      if (data.id == data.id && text == ""){
       deleteNote({id: data.id, title: textTitle, content: text})
       }
     });
@@ -112,7 +112,7 @@ function EditScreen({ route, navigation }) {
   
   return (
     <View style={tw`h-full w-full bg-purple-700`}>
-      <TextInput cursorColor={'#2563eb'}  placeholder='Title' placeholderTextColor={'gray'} defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2`} />
+      <TextInput cursorColor={'#2563eb'}  placeholder='Title' placeholderTextColor={'gray'} defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2 text-2xl`} />
       <TextInput scrollEnabled={false} multiline defaultValue={text} onChangeText={(newValue)=>{setText(newValue)}} style={tw`h-full w-full px-2`} />
     </View>
   );
