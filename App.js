@@ -97,7 +97,7 @@ function EditScreen({ route, navigation }) {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       updateNote({id: data.id, title: textTitle, content: text})
       console.log('perform actions before leaving screen');
-      if (data.id == data.id && text == ""){
+      if (data.id == data.id && text == "" && textTitle==""){
       deleteNote({id: data.id, title: textTitle, content: text})
       }
     });
