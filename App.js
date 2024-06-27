@@ -28,7 +28,7 @@ function HomeScreen({ navigation }) {
    * @returns 
    */
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("Note", {data: item}) } style={tw` m-0.5 bg-purple-400 rounded-sm px-1`}> 
+    <TouchableOpacity onPress={() => navigation.navigate("Note", {data: item}) } style={tw` m-0.5 bg-purple-200 rounded-sm px-1`}> 
       <Text style={tw`text-2xl`}>{item.title}</Text>
       <Text>{item.content}</Text>      
     </TouchableOpacity>
@@ -44,7 +44,7 @@ function HomeScreen({ navigation }) {
   return (
   
     
-    <View style={tw`w-full h-full bg-purple-700`}>
+    <View style={tw`w-full h-full bg-purple-400`}>
     <TouchableOpacity onPress={focusInput}>
      <TextInput ref={inputRef} defaultValue={searchText} placeholder="Search" placeholderTextColor={'gray'} onChangeText={(newValue)=>{setSearchText(newValue)}} style={tw`h-12 p-2 m-2 bg-blue-100 rounded-lg`} />
     </TouchableOpacity>
@@ -72,7 +72,7 @@ function HomeScreen({ navigation }) {
 
 function EditScreen({ route, navigation }) {
   const [updateNote]= useUpdateNoteMutation()
-  const [ deleteNote ] = useDeleteNoteMutation();
+  const [ deleteNote, {data: deleteData, error: dataError }] = useDeleteNoteMutation();
   const {data} = route.params
   const [textTitle,setTextTitle] = useState(data.title)
   const [text,setText] =useState(data.content)
@@ -81,9 +81,11 @@ function EditScreen({ route, navigation }) {
 */
   useEffect(() => {
     updateNote({id: data.id, title: textTitle, content: text });
-    navigation.setOptions({  headerRight: () => ( <TouchableOpacity onPress={() => {deleteNote({id: data.id, title: textTitle, content: text});console.log("Logo") }}>
+    navigation.setOptions({  headerRight: () => ( <TouchableOpacity onPress={() => {navigation.addListener('beforeRemove',(e)=> {deleteNote({id: data.id, title: textTitle, content: text});});navigation.navigate('Home'); console.log("Logo") }}>
     <Text style={tw`text-white text-center text-3xl mt--1`}>🗑️</Text>
-  </TouchableOpacity> ) });
+  </TouchableOpacity> )
+   });
+  
   console.log("When saving "+textTitle)
   
   
@@ -103,7 +105,7 @@ function EditScreen({ route, navigation }) {
     });
 
     return unsubscribe;
-  }, [navigation, text, textTitle]);
+  }, [ text, textTitle]);
   
 
 
@@ -111,9 +113,9 @@ function EditScreen({ route, navigation }) {
 
   
   return (
-    <View style={tw`h-full w-full bg-purple-700`}>
+    <View style={tw`h-full w-full bg-purple-400`}>
       <TextInput cursorColor={'#2563eb'}  placeholder='Title' placeholderTextColor={'gray'} defaultValue={textTitle} onChangeText={(newValue)=>{setTextTitle(newValue)}}  style={tw`h-20 w-full px-2 text-2xl`} />
-      <TextInput scrollEnabled={false} multiline defaultValue={text} onChangeText={(newValue)=>{setText(newValue)}} style={tw`h-full w-full px-2`} />
+      <TextInput scrollEnabled={false} placeholder='Content' placeholderTextColor={'gray'} multiline defaultValue={text} onChangeText={(newValue)=>{setText(newValue)}} style={tw`h-full w-full px-2`} />
     </View>
   );
 }
@@ -129,7 +131,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="Home">
           <Stack.Screen
             options={{
-              headerStyle: tw`bg-purple-700 border-0`,
+              headerStyle: tw`bg-purple-400 border-0`,
               headerTintColor: '#fff',
               headerTitleStyle: tw`font-bold`,
               headerShadowVisible: false, // gets rid of border on device
@@ -141,7 +143,7 @@ export default function App() {
           />
           <Stack.Screen
             options={{
-              headerStyle: tw`bg-purple-700 border-0 text-center`,
+              headerStyle: tw`bg-purple-400 border-0 text-center`,
               headerTintColor: '#fff',
               headerTitleStyle: tw`font-bold`,
               headerShadowVisible: false, // gets rid of border on device
